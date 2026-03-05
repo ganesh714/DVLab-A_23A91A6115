@@ -1,46 +1,93 @@
-# Load Air Passengers
-data(AirPassengers)
+# Load & Understand the iris Dataset
+data(iris)
+str(iris)
+View(iris)
 
-#Verify the Dataset
-?AirPassengers
-class(AirPassengers)
-View(AirPassengers)
+# Basic Scatter Plot: Sepal Length vs Sepal Width
+plot(iris$Sepal.Length, iris$Sepal.Width)
 
-# Convert the dataset to a dataframe
-ap_df<- data.frame(
-  year <- time(AirPassengers),
-  passengers = as.numeric(AirPassengers)
-)
-ap_df
-
-# Data Frame with years and months Seperately
-ap_df_months <- data.frame(
-  year=floor(time(AirPassengers)),
-  month= cycle(time(AirPassengers)),
-  passengers = as.numeric(AirPassengers)
-)
-ap_df_months
-
-plot(AirPassengers)
-
-plot(AirPassengers,
-     type='l',
-     main="Air Passengers Trend Analysis",
-     xlab="Months",
-     ylab="No.of passengers",
-     col="red"
+# Labeled Scatter Plot
+plot(
+  iris$Sepal.Length,
+  iris$Sepal.Width,
+  main = "Sepal Length vs Sepal Width",
+  xlab = "Sepal Length (cm)",
+  ylab = "Sepal Width (cm)",
+  col = "blue",
+  pch = 16
 )
 
-plot(AirPassengers,
-     type='l',
-     lwd=1.5,
-     main="Air Passengers Trend Analysis",
-     xlab="Months",
-     ylab="No.of passengers",
-     col="red"
+# Colored Scatter Plot by Species
+plot(
+  iris$Sepal.Length,
+  iris$Sepal.Width,
+  col = as.numeric(iris$Species),
+  pch = 16,
+  main = "Sepal Dimensions by Species"
 )
-points(AirPassengers,
-       type='o',
-       pch='16',
-       col="blue")
-grid()
+
+legend(
+  "topright",
+  legend = levels(iris$Species),
+  col = 1:3,
+  pch = 16
+)
+
+# Multivariate Scatter Plot (Color + Size)
+plot(
+  iris$Sepal.Length,
+  iris$Sepal.Width,
+  col = as.numeric(iris$Species),
+  pch = 16,
+  cex = iris$Petal.Length / max(iris$Petal.Length),
+  main = "Multivariate Scatter Plot (Color + Size)"
+)
+
+# Scatter Plot Matrix (Base R)
+pairs(
+  iris[, 1:4],
+  col = as.numeric(iris$Species),
+  pch = 16,
+  main = "Scatter Plot Matrix of Iris Dataset"
+)
+
+# Using ggplot2
+library(ggplot2)
+
+# Basic Scatter Plot
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point()
+
+# Colored Scatter by Species
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point(size = 2) +
+  theme_minimal()
+
+# Multivariate Scatter Plot
+ggplot(
+  iris,
+  aes(
+    x = Sepal.Length,
+    y = Sepal.Width,
+    color = Species,
+    size = Petal.Length
+  )
+) +
+  geom_point(alpha = 0.7) +
+  theme_minimal()
+
+# Faceted Scatter Plot
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point(color = "steelblue") +
+  facet_wrap(~Species) +
+  theme_minimal()
+
+# Scatter Plot Matrix using GGally
+library(GGally)
+
+ggpairs(
+  iris,
+  columns = 1:4,
+  aes(color = Species, alpha = 0.6)
+)
+
